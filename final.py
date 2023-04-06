@@ -1,4 +1,5 @@
 import logging
+logging.basicConfig(filename = 'AppLog.txt',level = logging.DEBUG, format = '%(levelname)s %(name)s %(message)s')
 import threading
 from kivy.clock import Clock, mainthread
 from kivymd.app import MDApp
@@ -23,7 +24,6 @@ import os
 import shutil
 
 Config.set('kivy', 'exit_on_escape', '0')
-logging.basicConfig(filename='App.log',level = logging.DEBUG, format = '%(levelname)s %(name)s %(message)s')
 LabelBase.register(name="DancingScript", fn_regular="DancingScript-Regular.otf")
 screen_helper = """
 
@@ -279,7 +279,6 @@ class MenuScreen(Screen):
     logging.info("In menuscreen")
     pass
 
-
 class DownloadScreen(Screen):
     logging.info("In dp downdload Screen.")
     dialog = None
@@ -300,30 +299,33 @@ class DownloadScreen(Screen):
             logging.info(f'The Entered username is {dp}.')
             ig = instaloader.Instaloader()
             ig.download_profile(dp, profile_pic_only=True)
-
-            path = '/storage/emulated/0/Download/' + dp
-            if os.path.exists(path):
-                logging.info('dp already exists in the system')
-                toast("Already exists", False)
-            else:
-                os.mkdir(path)
-                src_dir = '/data/user/0/org.test.insta_dp_post/files/app/' + dp
-                time.sleep(10)
-                dest_dir = path
-
-                allfiles = os.listdir(src_dir)
-
-                for fname in allfiles:
-                    shutil.copy2(os.path.join(src_dir, fname), dest_dir)
-                toast("Downloaded!!", False)
-                logging.info("Dp downloaded in the download folder")
+            #Apk code
+            # path = '/storage/emulated/0/Download/' + dp
+            # if os.path.exists(path):
+            #     logging.info('dp already exists in the system')
+            #     toast("Already exists", False)
+            # else:
+            #     os.mkdir(path)
+            #     src_dir = '/data/user/0/org.test.insta_dp_post/files/app/' + dp
+            #     time.sleep(10)
+            #     dest_dir = path
+            #
+            #     allfiles = os.listdir(src_dir)
+            #
+            #     for fname in allfiles:
+            #         shutil.copy2(os.path.join(src_dir, fname), dest_dir)
+            toast("Downloaded!!")
+            logging.info("Dp downloaded in the download folder")
 
         except instaloader.exceptions.ProfileNotExistsException:
             logging.warning('profile not exists')
-            toast("Profile Not Exists", False)
+            toast("Profile Not Exists")
 
         except Exception as e:
             logging.exception(e)
+
+        except :
+            logging.exception("Something went wrong")
             if not self.dialog:
                 logging.error('f Error :- {e} ')
                 self.dialog = MDDialog(text="Something Went Wrong", radius=[20, 7, 20, 7], auto_dismiss=False,
@@ -396,19 +398,19 @@ class UploadScreen(Screen):
         api_photo = '/data/user/0/org.test.insta_dp_post/files/app/api_photo.pyc'
         try:
             if os.path.exists(loc):
-                shutil.rmtree('/data/data/org.test.insta_dp_post/files/app/config', ignore_errors=True)
+                shutil.rmtree('/data/data/org.test.insta_dp_post/files/app/config', ignore_errors=True) #Apk code
 
             if os.path.exists(api_loc):
                 os.remove(
                     '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api.pyc')
                 shutil.move('/data/user/0/org.test.insta_dp_post/files/app/api.pyc',
-                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api.pyc')
+                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api.pyc') #Apk code
 
             if os.path.exists(api_photo):
                 os.remove(
                     '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api_photo.pyc')
                 shutil.move('/data/user/0/org.test.insta_dp_post/files/app/api_photo.pyc',
-                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api_photo.pyc')
+                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api_photo.pyc') #Apk code
 
             text = self.user_name.text
             logging.info("Entered username is {text}")
@@ -448,9 +450,9 @@ class UploadScreen(Screen):
 
                 bot.login(username=text, password=txt2)
                 logging.info("Logging successfull")
-                bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/modified_img.jpg', caption=txt3)
-                # bot.upload_photo('modified_img.jpg', caption=txt3)
-                toast("photo uploaded!!", False)
+                #bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/modified_img.jpg', caption=txt3) #Apk code
+                bot.upload_photo('modified_img.jpg', caption=txt3)
+                toast("photo uploaded!!")
                 logging.info("Post uploaded")
 
             else:
@@ -465,13 +467,13 @@ class UploadScreen(Screen):
 
                 bot.login(username=text, password=txt2)
                 logging.info("Logging successfull")
-                bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/Replaced_img1.jpg', caption=txt3)
-                # bot.upload_photo('Replaced_img1.jpg', caption=txt3)
-                toast("photo uploaded!!", False)
+                #bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/Replaced_img1.jpg', caption=txt3) #Apk code
+                bot.upload_photo('Replaced_img1.jpg', caption=txt3)
+                toast("photo uploaded!!")
                 logging.info("Post uploaded")
 
         except Exception as e:
-            logging.info("Erorr {e}")
+            logging.exception(f"Erorr {e}")
 
         except:
             logging.error("Displaying dialog box of somethhing went wrong")
