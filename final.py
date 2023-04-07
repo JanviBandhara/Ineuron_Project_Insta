@@ -17,7 +17,7 @@ from PIL import Image
 from kivy.animation import Animation
 from instabot import Bot
 from kivy.config import Config
-#from android.permissions import request_permissions, Permission
+from android.permissions import request_permissions, Permission
 import instaloader
 import time
 import os
@@ -264,7 +264,7 @@ ScreenManager:
     MDLabel:
         size_hint : (.97, .55)
         id: waitt
-        font_size : 20
+        font_size : 30
         color: 'black'
         text_color : "#C6DEFF"
         font_name : "DancingScript"
@@ -299,32 +299,32 @@ class DownloadScreen(Screen):
             logging.info(f'The Entered username is {dp}.')
             ig = instaloader.Instaloader()
             ig.download_profile(dp, profile_pic_only=True)
-            #Apk code
-            # path = '/storage/emulated/0/Download/' + dp
-            # if os.path.exists(path):
-            #     logging.info('dp already exists in the system')
-            #     toast("Already exists", False)
-            # else:
-            #     os.mkdir(path)
-            #     src_dir = '/data/user/0/org.test.insta_dp_post/files/app/' + dp
-            #     time.sleep(10)
-            #     dest_dir = path
-            #
-            #     allfiles = os.listdir(src_dir)
-            #
-            #     for fname in allfiles:
-            #         shutil.copy2(os.path.join(src_dir, fname), dest_dir)
-            toast("Downloaded!!")
+
+            path = '/storage/emulated/0/Download/' + dp
+            if os.path.exists(path):
+                logging.info('dp already exists in the system')
+                toast("Already exists",False)
+            else:
+                os.mkdir(path)
+                src_dir = '/data/user/0/org.test.insta_dp_post/files/app/' + dp
+                time.sleep(10)
+                dest_dir = path
+                
+                allfiles = os.listdir(src_dir)
+                
+                for fname in allfiles:
+                    shutil.copy2(os.path.join(src_dir, fname), dest_dir)
+                toast("Downloaded!!",False)
             logging.info("Dp downloaded in the download folder")
 
         except instaloader.exceptions.ProfileNotExistsException:
             logging.warning('profile not exists')
-            toast("Profile Not Exists")
+            toast("Profile Not Exists",False)
 
         except Exception as e:
             logging.exception(e)
 
-        except :
+        except:
             logging.exception("Something went wrong")
             if not self.dialog:
                 logging.error('f Error :- {e} ')
@@ -390,7 +390,7 @@ class UploadScreen(Screen):
     def on_click(self):
         logging.info("Displaying Two Factor Authentication to be turned off")
         self.b_t1.ii = "Two Factor Authentication Needed to be turned off if in case its on!"
-        anim = Animation(font_size=20)
+        anim = Animation(font_size=30)
         anim.start(self.b_t1)
         anim.repeat = True
         loc = '/data/data/org.test.insta_dp_post/files/app/config'
@@ -398,19 +398,20 @@ class UploadScreen(Screen):
         api_photo = '/data/user/0/org.test.insta_dp_post/files/app/api_photo.pyc'
         try:
             if os.path.exists(loc):
-                shutil.rmtree('/data/data/org.test.insta_dp_post/files/app/config', ignore_errors=True) #Apk code
+                shutil.rmtree('/data/data/org.test.insta_dp_post/files/app/config', ignore_errors=True)
+                #shutil.rmtree('C:/Users/abc/PycharmProjects/Instaa_MD/config', ignore_errors=True)
 
             if os.path.exists(api_loc):
                 os.remove(
                     '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api.pyc')
                 shutil.move('/data/user/0/org.test.insta_dp_post/files/app/api.pyc',
-                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api.pyc') #Apk code
+                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api.pyc')
 
             if os.path.exists(api_photo):
                 os.remove(
                     '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api_photo.pyc')
                 shutil.move('/data/user/0/org.test.insta_dp_post/files/app/api_photo.pyc',
-                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api_photo.pyc') #Apk code
+                            '/data/user/0/org.test.insta_dp_post/files/app/_python_bundle/site-packages/instabot/api/api_photo.pyc')
 
             text = self.user_name.text
             logging.info("Entered username is {text}")
@@ -450,8 +451,8 @@ class UploadScreen(Screen):
 
                 bot.login(username=text, password=txt2)
                 logging.info("Logging successfull")
-                #bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/modified_img.jpg', caption=txt3) #Apk code
-                bot.upload_photo('modified_img.jpg', caption=txt3)
+                bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/modified_img.jpg', caption=txt3)
+                #bot.upload_photo('modified_img.jpg', caption=txt3)
                 toast("photo uploaded!!")
                 logging.info("Post uploaded")
 
@@ -467,8 +468,8 @@ class UploadScreen(Screen):
 
                 bot.login(username=text, password=txt2)
                 logging.info("Logging successfull")
-                #bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/Replaced_img1.jpg', caption=txt3) #Apk code
-                bot.upload_photo('Replaced_img1.jpg', caption=txt3)
+                bot.upload_photo('/data/user/0/org.test.insta_dp_post/files/app/Replaced_img1.jpg', caption=txt3)
+                #bot.upload_photo('Replaced_img1.jpg', caption=txt3)
                 toast("photo uploaded!!")
                 logging.info("Post uploaded")
 
@@ -527,9 +528,9 @@ class DemoApp(MDApp):
         screen = Builder.load_string(screen_helper)
         self.theme_cls.primary_palette = "BlueGray"
         self.theme_cls.theme_style = "Dark"
-        # request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA,
-        #                      Permission.INTERNET, Permission.READ_MEDIA_IMAGES, Permission.ACCESS_FINE_LOCATION
-        #                      ])
+        request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA,
+                             Permission.INTERNET, Permission.READ_MEDIA_IMAGES, Permission.ACCESS_FINE_LOCATION
+                             ])
         return screen
 
 
